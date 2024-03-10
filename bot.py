@@ -1,6 +1,13 @@
 from config import *
 import telebot
 import openai
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+
+user_membership_data = {
+    "user1": {"plan_validity": True},
+    "user2": {"plan_validity": False}
+}
+
 chatStr = '' 
 def ChatModal(prompt):
     global chatStr
@@ -17,11 +24,29 @@ def ChatModal(prompt):
             )
     chatStr += f"{response['choices'][0]['text']}"
     return response['choices'][0]['text']
-bot=telebot.TeleBot(BOT_API)
-@bot.message_handler(['start'])
-def start(message):
-    bot.reply_to(message,"Hello,  Welcome to Damove OTP Bypass Bot")
-@bot.message_handler()
+
+def call_script(update, context):
+    user_id = str(update.effective_user.id)
+    if user_membership_data.get(user_id, {}).get("plan_validity", false):
+        update.message.reply_text(ChatModal("Call command"))
+    else:
+        update.message.reply_text("Sorry, your membership plan is not active.")
+
+def membership_command(update, context):
+    user_id = str(update.effective_user.id)
+    if user_membership_data.get(user_id, {}).get("plan_validity", False):
+        update.message.reply_text("Your membership plan is active.")
+    else:
+        update.message.reply_text("Your membership plan is not active.")
+
+
+
+# bot=telebot.TeleBot(BOT_API)
+# @bot.message_handler(['start'])
+        
+def start(update, context):
+    update.message.reply_text("Hello,  Welcome to Damove OTP Bypass Bot")
+# @bot.message_handler()
 def chat(message):
     #if message.from_user.id==my_id:
         try:
@@ -32,5 +57,15 @@ def chat(message):
             bot.reply_to(message,e)
     # else:
     #     print("Someone else tried our bot: ",message.text)
-print("Bot Started...")
-bot.polling()
+def main():
+    updater = Updater(BOT_API, use_context=True)
+    dp = updater.dispatcher
+    dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(CommandHandler("membership", membership_command))
+    dp.add_handler(CommandHandler("call", call_script))
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, chat))
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == '__main__':
+    main()
