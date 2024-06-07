@@ -1,4 +1,4 @@
-<h1>TeleBot Call API Project</h1>
+<h1>TeleScript Caller</h1>
 
 This project contains a Python script to make API calls to a server that initiates phone calls with specified scripts.
 
