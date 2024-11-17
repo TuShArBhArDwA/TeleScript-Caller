@@ -1,5 +1,8 @@
-<h1>TeleScript Caller</h1>
-![TeleScript-Caller_Readme_Image](https://github.com/user-attachments/assets/4669345e-50f9-4a6f-881f-236743216536)
+# TeleScript Caller
+
+![TeleScript-Caller_Readme_Image](https://github.com/user-attachments/assets/bbe32921-4d4d-4253-83f0-feaf555882e8)
+
+
 
 This project contains a Python script to make API calls to a server that initiates phone calls with specified scripts.
 
